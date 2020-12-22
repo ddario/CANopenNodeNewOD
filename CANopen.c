@@ -951,7 +951,7 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
     }
 #endif
 
-    /* CANopen Node ID is unconfigured, stop initialization here */
+    /* CANopen Node ID is not configured, stop initialization here */
     if (co->nodeIdUnconfigured) {
         return CO_ERROR_NODE_ID_UNCONFIGURED_LSS;
     }
@@ -959,17 +959,17 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
     /* Emergency */
     if (CO_GET_CNT(EM) == 1) {
         err = CO_EM_init(co->em,
-                         OD_GET(H1001, OD_H1001_ERR_REG),
+                         OD_find (od, OD_H1001_ERR_REG),
  #if (CO_CONFIG_EM) & CO_CONFIG_EM_PRODUCER
-                         OD_GET(H1014, OD_H1014_COBID_EMERGENCY),
+                         OD_find (od, OD_H1014_COBID_EMERGENCY),
                          co->CANmodule,
                          CO_GET_CO(TX_IDX_EM_PROD),
   #if (CO_CONFIG_EM) & CO_CONFIG_EM_PROD_INHIBIT
-                         OD_GET(H1015, OD_H1015_INHIBIT_TIME_EMCY),
+                         OD_find (od, OD_H1015_INHIBIT_TIME_EMCY),
   #endif
  #endif
  #if (CO_CONFIG_EM) & CO_CONFIG_EM_HISTORY
-                         OD_GET(H1003, OD_H1003_PREDEF_ERR_FIELD),
+                         OD_find (od, OD_H1003_PREDEF_ERR_FIELD),
  #endif
  #if (CO_CONFIG_EM) & CO_CONFIG_EM_STATUS_BITS
                          OD_statusBits,
@@ -985,7 +985,7 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
     /* NMT_Heartbeat */
     if (CO_GET_CNT(NMT) == 1) {
         err = CO_NMT_init(co->NMT,
-                          OD_GET(H1017, OD_H1017_PRODUCER_HB_TIME),
+                          OD_find (od, OD_H1017_PRODUCER_HB_TIME),
                           em,
                           nodeId,
                           NMTcontrol,
@@ -1020,8 +1020,9 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
 
     /* SDOserver */
     if (CO_GET_CNT(SDO_SRV) > 0) {
-        const OD_entry_t *SDOsrvPar = OD_GET(H1200,OD_H1200_SDO_SERVER_1_PARAM);
+        const OD_entry_t *SDOsrvPar;
         for (int16_t i = 0; i < CO_GET_CNT(SDO_SRV); i++) {
+            SDOsrvPar = OD_find (od, OD_H1200_SDO_SERVER_1_PARAM + i);
             err = CO_SDOserver_init(&co->SDOserver[i],
                                     od,
                                     SDOsrvPar++,
@@ -1037,11 +1038,12 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
 
 #if (CO_CONFIG_SDO_CLI) & CO_CONFIG_SDO_CLI_ENABLE
     if (CO_GET_CNT(SDO_CLI) > 0) {
-        const OD_entry_t *SDOcliPar = OD_GET(H1280,OD_H1280_SDO_CLIENT_1_PARAM);
+        const OD_entry_t *SDOcliPar;
         for (int16_t i = 0; i < CO_GET_CNT(SDO_CLI); i++) {
+            SDOcliPar = OD_find(od, OD_H1280_SDO_CLIENT_1_PARAM + i);
             err = CO_SDOclient_init(&co->SDOclient[i],
                                     od,
-                                    SDOcliPar++,
+                                    SDOcliPar,
                                     nodeId,
                                     co->CANmodule,
                                     CO_GET_CO(RX_IDX_SDO_CLI) + i,
@@ -1087,9 +1089,11 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
 
 #if (CO_CONFIG_PDO) & CO_CONFIG_RPDO_ENABLE
     if (CO_GET_CNT(RPDO) > 0) {
-        const OD_entry_t *RPDOcomm = OD_GET(H1400, OD_H1400_RXPDO_1_PARAM);
-        const OD_entry_t *RPDOmap = OD_GET(H1600, OD_H1600_RXPDO_1_MAPPING);
+        const OD_entry_t *RPDOcomm;
+        const OD_entry_t *RPDOmap;
         for (int16_t i = 0; i < CO_GET_CNT(RPDO); i++) {
+            RPDOcomm = OD_find(od, OD_H1400_RXPDO_1_PARAM + i);
+            RPDOmap = OD_find(od, OD_H1600_RXPDO_1_MAPPING + i);
             err = CO_RPDO_init(co->RPDO[i],
                                em,
                                co->SDO[0],
@@ -1100,8 +1104,8 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
                                nodeId,
                                ((i < 4) ? (CO_CAN_ID_RPDO_1 + i * 0x100) : 0),
                                0,
-                               RPDOcomm++,
-                               RPDOmap++,
+                               RPDOcomm,
+                               RPDOmap,
                                OD_H1400_RXPDO_1_PARAM + i,
                                OD_H1600_RXPDO_1_MAPPING + i,
                                co->CANmodule,
@@ -1113,9 +1117,11 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
 
 #if (CO_CONFIG_PDO) & CO_CONFIG_TPDO_ENABLE
     if (CO_GET_CNT(TPDO) > 0) {
-        const OD_entry_t *TPDOcomm = OD_GET(H1800, OD_H1800_TXPDO_1_PARAM);
-        const OD_entry_t *TPDOmap = OD_GET(H1A00, OD_H1A00_TXPDO_1_MAPPING);
+        const OD_entry_t *TPDOcomm;
+        const OD_entry_t *TPDOmap;
         for (int16_t i = 0; i < CO_GET_CNT(TPDO); i++) {
+            TPDOcomm = OD_find(od, OD_H1800_TXPDO_1_PARAM + i);
+            TPDOmap = OD_find(od, OD_H1A00_TXPDO_1_MAPPING + i);
             err = CO_TPDO_init(co->TPDO[i],
                                em,
                                co->SDO[0],
@@ -1126,8 +1132,8 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
                                nodeId,
                                ((i < 4) ? (CO_CAN_ID_TPDO_1 + i * 0x100) : 0),
                                0,
-                               TPDOcomm++,
-                               TPDOmap++,
+                               TPDOcomm,
+                               TPDOmap,
                                OD_H1800_TXPDO_1_PARAM + i,
                                OD_H1A00_TXPDO_1_MAPPING + i,
                                co->CANmodule,
@@ -1161,9 +1167,11 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
                                 OD_H13FF_SRDO_CHECKSUM);
         if (err) return err;
 
-        const OD_entry_t *SRDOcomm = OD_GET(H1301, OD_H1301_SRDO_1_PARAM);
-        const OD_entry_t *SRDOmap = OD_GET(H1318, OD_H1381_SRDO_1_MAPPING);
+        const OD_entry_t *SRDOcomm;
+        const OD_entry_t *SRDOmap;
         for (int16_t i = 0; i < CO_GET_CNT(SRDO); i++) {
+            SRDOcomm = OD_find(od, OD_H1301_SRDO_1_PARAM + i);
+            SRDOmap = OD_find(od, OD_H1381_SRDO_1_MAPPING + i);
             uint16_t CANdevRxIdx = CO_GET_CO(RX_IDX_SRDO) + 2 * i;
             uint16_t CANdevTxIdx = CO_GET_CO(TX_IDX_SRDO) + 2 * i;
 
@@ -1173,8 +1181,8 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
                                co->SDO[0],
                                nodeId,
                                ((i == 0) ? CO_CAN_ID_SRDO_1 : 0),
-                               SRDOcomm++,
-                               SRDOmap++,
+                               SRDOcomm,
+                               SRDOmap,
                                &OD_safetyConfigurationChecksum[i],
                                OD_H1301_SRDO_1_PARAM + i,
                                OD_H1381_SRDO_1_MAPPING + i,
