@@ -242,7 +242,7 @@ typedef struct {
      * read/write functions operate on it. If memory for data object is not
      * specified by Object Dictionary, then dataObjectOriginal is NULL.
      */
-    void *dataObjectOriginal;
+    void *data;
     /** Pointer to object, passed by @ref OD_extensionIO_init(). Can be used
      * inside read / write functions from IO extension.
      */
@@ -448,7 +448,7 @@ uint32_t OD_getSDOabCode(ODR_t returnCode);
 
 
 /**
- * Initialise extended OD object with own read/write functions
+ * Initialize extended OD object with own read/write functions
  *
  * This function works on OD object, which has IO extension enabled. It gives
  * application very powerful tool: definition of own IO access on own OD
@@ -504,11 +504,12 @@ ODR_t OD_extensionIO_init(const OD_entry_t *entry,
  * Dictionary variables.
  */
 /**
- * Get int8_t variable from Object Dictionary
+ * Get variable from Object Dictionary
  *
  * @param entry OD entry returned by @ref OD_find().
  * @param subIndex Sub-index of the variable from the OD object.
  * @param [out] val Value will be written here.
+ * @param len Size of value to retrieve from OD.
  * @param odOrig If true, then potential IO extension on entry will be
  * ignored and data in the original OD location will be returned.
  *
@@ -516,42 +517,74 @@ ODR_t OD_extensionIO_init(const OD_entry_t *entry,
  * variable does not exist in object dictionary or it does not have the correct
  * length or other reason.
  */
-ODR_t OD_get_i8(const OD_entry_t *entry, uint8_t subIndex,
-                int8_t *val, bool_t odOrig);
-/** Get int16_t variable from Object Dictionary, see @ref OD_get_i8 */
-ODR_t OD_get_i16(const OD_entry_t *entry, uint8_t subIndex,
-                 int16_t *val, bool_t odOrig);
-/** Get int32_t variable from Object Dictionary, see @ref OD_get_i8 */
-ODR_t OD_get_i32(const OD_entry_t *entry, uint8_t subIndex,
-                 int32_t *val, bool_t odOrig);
-/** Get int64_t variable from Object Dictionary, see @ref OD_get_i8 */
-ODR_t OD_get_i64(const OD_entry_t *entry, uint8_t subIndex,
-                 int64_t *val, bool_t odOrig);
-/** Get uint8_t variable from Object Dictionary, see @ref OD_get_i8 */
-ODR_t OD_get_u8(const OD_entry_t *entry, uint8_t subIndex,
-                uint8_t *val, bool_t odOrig);
-/** Get uint16_t variable from Object Dictionary, see @ref OD_get_i8 */
-ODR_t OD_get_u16(const OD_entry_t *entry, uint8_t subIndex,
-                 uint16_t *val, bool_t odOrig);
-/** Get uint32_t variable from Object Dictionary, see @ref OD_get_i8 */
-ODR_t OD_get_u32(const OD_entry_t *entry, uint8_t subIndex,
-                 uint32_t *val, bool_t odOrig);
-/** Get uint64_t variable from Object Dictionary, see @ref OD_get_i8 */
-ODR_t OD_get_u64(const OD_entry_t *entry, uint8_t subIndex,
-                 uint64_t *val, bool_t odOrig);
-/** Get float32_t variable from Object Dictionary, see @ref OD_get_i8 */
-ODR_t OD_get_r32(const OD_entry_t *entry, uint8_t subIndex,
-                 float32_t *val, bool_t odOrig);
-/** Get float64_t variable from Object Dictionary, see @ref OD_get_i8 */
-ODR_t OD_get_r64(const OD_entry_t *entry, uint8_t subIndex,
-                 float64_t *val, bool_t odOrig);
+ODR_t OD_get_value(const OD_entry_t *entry, uint8_t subIndex,
+                void *val, OD_size_t len, bool_t odOrig);
+
+/** Get int8_t variable from Object Dictionary, see @ref OD_get_value */
+#define OD_get_i8(entry, subIndex, val, odOrig) \
+    OD_get_value((entry), (subIndex), (val), sizeof(int8_t), (odOrig))
+
+/** Get int16_t variable from Object Dictionary, see @ref OD_get_value */
+#define OD_get_i16(entry, subIndex, val, odOrig) \
+    OD_get_value((entry), (subIndex), (val), sizeof(int16_t), (odOrig))
+
+/** Get int32_t variable from Object Dictionary, see @ref OD_get_value */
+#define OD_get_i32(entry, subIndex, val, odOrig) \
+    OD_get_value((entry), (subIndex), (val), sizeof(int32_t), (odOrig))
+
+/** Get int64_t variable from Object Dictionary, see @ref OD_get_value */
+#define OD_get_i64(entry, subIndex, val, odOrig) \
+    OD_get_value((entry), (subIndex), (val), sizeof(int64_t), (odOrig))
+
+/** Get uint8_t variable from Object Dictionary, see @ref OD_get_value */
+#define OD_get_u8(entry, subIndex, val, odOrig) \
+    OD_get_value((entry), (subIndex), (val), sizeof(uint8_t), (odOrig))
+
+/** Get uint16_t variable from Object Dictionary, see @ref OD_get_value */
+#define OD_get_u16(entry, subIndex, val, odOrig) \
+    OD_get_value((entry), (subIndex), (val), sizeof(uint16_t), (odOrig))
+
+/** Get uint32_t variable from Object Dictionary, see @ref OD_get_value */
+#define OD_get_u32(entry, subIndex, val, odOrig) \
+    OD_get_value((entry), (subIndex), (val), sizeof(uint32_t), (odOrig))
+
+/** Get uint64_t variable from Object Dictionary, see @ref OD_get_value */
+#define OD_get_u64(entry, subIndex, val, odOrig) \
+    OD_get_value((entry), (subIndex), (val), sizeof(uint64_t), (odOrig))
+
+/** Get float32_t variable from Object Dictionary, see @ref OD_get_value */
+#define OD_get_r32(entry, subIndex, val, odOrig) \
+    OD_get_value((entry), (subIndex), (val), sizeof(float32_t), (odOrig))
+
+/** Get float64_t variable from Object Dictionary, see @ref OD_get_value */
+#define OD_get_r64(entry, subIndex, val, odOrig) \
+    OD_get_value((entry), (subIndex), (val), sizeof(float64_t), (odOrig))
 
 /**
- * Set int8_t variable in Object Dictionary
+ * Get pointer to memory which holds data variable from Object Dictionary
+ *
+ * Function always returns "data" pointer, which points to data
+ * in the original OD location. Take care, if IO extension is enabled on OD
+ * entry. Take also care that "data" could be not aligned to data type.
  *
  * @param entry OD entry returned by @ref OD_find().
  * @param subIndex Sub-index of the variable from the OD object.
- * @param val Value to write.
+ * @param [out] val Pointer to variable will be written here.
+ * @param [out] len Variable length will be written here. (allow NULL)
+ *
+ * @return Value from @ref ODR_t, "ODR_OK" in case of success. Error, if
+ * variable does not exist in object dictionary or other reason.
+ */
+ODR_t OD_getPtr(const OD_entry_t *entry, uint8_t subIndex, void **val,
+                OD_size_t *len);
+
+/**
+ * Set variable in Object Dictionary
+ *
+ * @param entry OD entry returned by @ref OD_find().
+ * @param subIndex Sub-index of the variable from the OD object.
+ * @param val Pointer to value to write.
+ * @param len Size of value to write.
  * @param odOrig If true, then potential IO extension on entry will be
  * ignored and data in the original OD location will be written.
  *
@@ -559,97 +592,50 @@ ODR_t OD_get_r64(const OD_entry_t *entry, uint8_t subIndex,
  * variable does not exist in object dictionary or it does not have the correct
  * length or other reason.
  */
-ODR_t OD_set_i8(const OD_entry_t *entry, uint8_t subIndex,
-                int8_t val, bool_t odOrig);
-/** Set int16_t variable in Object Dictionary, see @ref OD_set_i8 */
-ODR_t OD_set_i16(const OD_entry_t *entry, uint8_t subIndex,
-                 int16_t val, bool_t odOrig);
-/** Set int16_t variable in Object Dictionary, see @ref OD_set_i8 */
-ODR_t OD_set_i32(const OD_entry_t *entry, uint8_t subIndex,
-                 int32_t val, bool_t odOrig);
-/** Set int16_t variable in Object Dictionary, see @ref OD_set_i8 */
-ODR_t OD_set_i64(const OD_entry_t *entry, uint8_t subIndex,
-                 int64_t val, bool_t odOrig);
-/** Set uint8_t variable in Object Dictionary, see @ref OD_set_i8 */
-ODR_t OD_set_u8(const OD_entry_t *entry, uint8_t subIndex,
-                uint8_t val, bool_t odOrig);
-/** Set uint16_t variable in Object Dictionary, see @ref OD_set_i8 */
-ODR_t OD_set_u16(const OD_entry_t *entry, uint8_t subIndex,
-                 uint16_t val, bool_t odOrig);
-/** Set uint32_t variable in Object Dictionary, see @ref OD_set_i8 */
-ODR_t OD_set_u32(const OD_entry_t *entry, uint8_t subIndex,
-                 uint32_t val, bool_t odOrig);
-/** Set uint64_t variable in Object Dictionary, see @ref OD_set_i8 */
-ODR_t OD_set_u64(const OD_entry_t *entry, uint8_t subIndex,
-                 uint64_t val, bool_t odOrig);
-/** Set float32_t variable in Object Dictionary, see @ref OD_set_i8 */
-ODR_t OD_set_r32(const OD_entry_t *entry, uint8_t subIndex,
-                 float32_t val, bool_t odOrig);
-/** Set float64_t variable in Object Dictionary, see @ref OD_set_i8 */
-ODR_t OD_set_r64(const OD_entry_t *entry, uint8_t subIndex,
-                 float64_t val, bool_t odOrig);
+ODR_t OD_set_value(const OD_entry_t *entry, uint8_t subIndex, void *val,
+                   OD_size_t len, bool_t odOrig);
 
-/**
- * Get pointer to int8_t variable from Object Dictionary
- *
- * Function always returns "dataObjectOriginal" pointer, which points to data
- * in the original OD location. Take care, if IO extension is enabled on OD
- * entry.
- *
- * @param entry OD entry returned by @ref OD_find().
- * @param subIndex Sub-index of the variable from the OD object.
- * @param [out] val Pointer to variable will be written here.
- *
- * @return Value from @ref ODR_t, "ODR_OK" in case of success. Error, if
- * variable does not exist in object dictionary or it does not have the correct
- * length or other reason.
- */
-ODR_t OD_getPtr_i8(const OD_entry_t *entry, uint8_t subIndex, int8_t **val);
-/** Get pointer to int16_t variable from OD, see @ref OD_getPtr_i8 */
-ODR_t OD_getPtr_i16(const OD_entry_t *entry, uint8_t subIndex, int16_t **val);
-/** Get pointer to int32_t variable from OD, see @ref OD_getPtr_i8 */
-ODR_t OD_getPtr_i32(const OD_entry_t *entry, uint8_t subIndex, int32_t **val);
-/** Get pointer to int64_t variable from OD, see @ref OD_getPtr_i8 */
-ODR_t OD_getPtr_i64(const OD_entry_t *entry, uint8_t subIndex, int64_t **val);
-/** Get pointer to uint8_t variable from OD, see @ref OD_getPtr_i8 */
-ODR_t OD_getPtr_u8(const OD_entry_t *entry, uint8_t subIndex, uint8_t **val);
-/** Get pointer to uint16_t variable from OD, see @ref OD_getPtr_i8 */
-ODR_t OD_getPtr_u16(const OD_entry_t *entry, uint8_t subIndex, uint16_t **val);
-/** Get pointer to uint32_t variable from OD, see @ref OD_getPtr_i8 */
-ODR_t OD_getPtr_u32(const OD_entry_t *entry, uint8_t subIndex, uint32_t **val);
-/** Get pointer to uint64_t variable from OD, see @ref OD_getPtr_i8 */
-ODR_t OD_getPtr_u64(const OD_entry_t *entry, uint8_t subIndex, uint64_t **val);
-/** Get pointer to float32_t variable from OD, see @ref OD_getPtr_i8 */
-ODR_t OD_getPtr_r32(const OD_entry_t *entry, uint8_t subIndex, float32_t **val);
-/** Get pointer to float64_t variable from OD, see @ref OD_getPtr_i8 */
-ODR_t OD_getPtr_r64(const OD_entry_t *entry, uint8_t subIndex, float64_t **val);
-/**
- * Get pointer to "visible string" variable from Object Dictionary
- *
- * Function always returns "dataObjectOriginal" pointer, which points to data
- * in the original OD location. Take care, if IO extension is enabled on OD
- * entry.
- *
- * @param entry OD entry returned by @ref OD_find().
- * @param subIndex Sub-index of the variable from the OD object.
- * @param [out] val Pointer to variable will be written here.
- * @param [out] dataLength Total variable length will be written here, may be
- * NULL.
- *
- * @return Value from @ref ODR_t, "ODR_OK" in case of success. Error, if
- * variable does not exist in object dictionary or it has zero length or other
- * reason.
- */
-ODR_t OD_getPtr_vs(const OD_entry_t *entry, uint8_t subIndex,
-                   char **val, OD_size_t *dataLength);
-/** Get pointer to "octet string" variable from OD, see @ref OD_getPtr_vs */
-ODR_t OD_getPtr_os(const OD_entry_t *entry, uint8_t subIndex,
-                   uint8_t **val, OD_size_t *dataLength);
-/** Get pointer to "unicode string" variable from OD, see @ref OD_getPtr_vs */
-ODR_t OD_getPtr_us(const OD_entry_t *entry, uint8_t subIndex,
-                   uint16_t **val, OD_size_t *dataLength);
+/** Set int8_t variable in Object Dictionary, see @ref OD_set_value */
+#define OD_set_i8(entry, subIndex, val, odOrig) \
+    OD_set_value((entry), (subIndex), &(val), sizeof(int8_t), (odOrig))
+
+/** Set int16_t variable in Object Dictionary, see @ref OD_set_value */
+#define OD_set_i16(entry, subIndex, val, odOrig) \
+    OD_set_value((entry), (subIndex), &(val), sizeof(int16_t), (odOrig))
+
+/** Set int32_t variable in Object Dictionary, see @ref OD_set_value */
+#define OD_set_i32(entry, subIndex, val, odOrig) \
+    OD_set_value((entry), (subIndex), &(val), sizeof(int32_t), (odOrig))
+
+/** Set int32_t variable in Object Dictionary, see @ref OD_set_value */
+#define OD_set_i64(entry, subIndex, val, odOrig) \
+    OD_set_value((entry), (subIndex), &(val), sizeof(int64_t), (odOrig))
+
+/** Set uint8_t variable in Object Dictionary, see @ref OD_set_value */
+#define OD_set_u8(entry, subIndex, val, odOrig) \
+    OD_set_value((entry), (subIndex), &(val), sizeof(uint8_t), (odOrig))
+
+/** Set uint16_t variable in Object Dictionary, see @ref OD_set_value */
+#define OD_set_u16(entry, subIndex, val, odOrig) \
+    OD_set_value((entry), (subIndex), &(val), sizeof(uint16_t), (odOrig))
+
+/** Set uint32_t variable in Object Dictionary, see @ref OD_set_value */
+#define OD_set_u32(entry, subIndex, val, odOrig) \
+    OD_set_value((entry), (subIndex), &(val), sizeof(uint32_t), (odOrig))
+
+/** Set uint64_t variable in Object Dictionary, see @ref OD_set_value */
+#define OD_set_u64(entry, subIndex, val, odOrig) \
+    OD_set_value((entry), (subIndex), &(val), sizeof(uint64_t), (odOrig))
+
+/** Set float32_t variable in Object Dictionary, see @ref OD_set_value */
+#define OD_set_r32(entry, subIndex, val, odOrig) \
+    OD_set_value((entry), (subIndex), &(val), sizeof(float32_t), (odOrig))
+
+/** Set float64_t variable in Object Dictionary, see @ref OD_set_value */
+#define OD_set_f64(entry, subIndex, val, odOrig) \
+    OD_set_value((entry), (subIndex), &(val), sizeof(float64_t), (odOrig))
+
 /** @} */ /* CO_ODgetSetters */
-
 
 #if defined OD_DEFINITION || defined CO_DOXYGEN
 /**
@@ -695,6 +681,26 @@ typedef enum {
     ODT_EXTENSION_MASK = 0x10
 } OD_objectTypes_t;
 
+
+/**
+ * Object for extended type of OD variable, configurable by
+ * @ref OD_extensionIO_init() function. Contains application specified
+ * parameters for extended OD object.
+ */
+typedef struct OD_obj_extended_s {
+    /** Object on which read and write will operate */
+    void *object;
+    /** Application specified function pointer, see @ref OD_IO_t. */
+    OD_size_t (*read)(OD_stream_t *stream, uint8_t subIndex,
+                      void *buf, OD_size_t count, ODR_t *returnCode);
+    /** Application specified function pointer, see @ref OD_IO_t. */
+    OD_size_t (*write)(OD_stream_t *stream, uint8_t subIndex,
+                       const void *buf, OD_size_t count, ODR_t *returnCode);
+    /** Pointer to PDO flags bit-field, see @ref OD_subEntry_t, may be NULL. */
+    OD_flagsPDO_t *flagsPDO;
+} OD_obj_extended_t;
+
+
 /**
  * Object for single OD variable, used for "VAR" type OD objects
  */
@@ -702,16 +708,23 @@ typedef struct {
     void *data; /**< Pointer to data */
     OD_attr_t attribute; /**< Attribute bitfield, see @ref OD_attributes_t */
     OD_size_t dataLength; /**< Data length in bytes */
+    OD_obj_extended_t *ext; /**< Pointer to extensions or NULL */
 } OD_obj_var_t;
 
 /**
  * Object for OD array of variables, used for "ARRAY" type OD objects
  */
 typedef struct {
-    uint8_t *data0; /**< Pointer to data for sub-index 0 */
+    /*
+     * Inherited from #OD_obj_var_t
+     * base.data       <- Pointer to data for sub-index 0
+     * base.attribute  <- Attribute bitfield for sub-index 0,
+     *                    see @ref OD_attributes_t
+     * base.dataLength <- sub-index 0 data length (always 1 byte)
+     * base.ext        <- pointer to extensions or NULL
+     */
+    OD_obj_var_t base;
     void *data; /**< Pointer to array of data */
-    OD_attr_t attribute0; /**< Attribute bitfield for sub-index 0, see
-                               @ref OD_attributes_t */
     OD_attr_t attribute; /**< Attribute bitfield for array elements */
     OD_size_t dataElementLength; /**< Data length of array elements in bytes */
     OD_size_t dataElementSizeof; /**< Sizeof one array element in bytes */
@@ -721,39 +734,16 @@ typedef struct {
  * Object for OD sub-elements, used in "RECORD" type OD objects
  */
 typedef struct {
-    void *data; /**< Pointer to data */
+    /*
+     * Inherited from #OD_obj_var_t
+     * base.data       <- Pointer to data
+     * base.attribute  <- Attribute bitfield see @ref OD_attributes_t
+     * base.dataLength <- data length
+     * base.ext        <- pointer to extensions or NULL
+     */
+    OD_obj_var_t base;
     uint8_t subIndex; /**< Sub index of element. */
-    OD_attr_t attribute; /**< Attribute bitfield, see @ref OD_attributes_t */
-    OD_size_t dataLength; /**< Data length in bytes */
 } OD_obj_record_t;
-
-/**
- * Object pointed by @ref OD_obj_extended_t contains application specified
- * parameters for extended OD object
- */
-typedef struct {
-    /** Object on which read and write will operate */
-    void *object;
-    /** Application specified function pointer, see @ref OD_IO_t. */
-    OD_size_t (*read)(OD_stream_t *stream, uint8_t subIndex,
-                      void *buf, OD_size_t count, ODR_t *returnCode);
-    /** Application specified function pointer, see @ref OD_IO_t. */
-    OD_size_t (*write)(OD_stream_t *stream, uint8_t subIndex,
-                       const void *buf, OD_size_t count, ODR_t *returnCode);
-} OD_extensionIO_t;
-
-/**
- * Object for extended type of OD variable, configurable by
- * @ref OD_extensionIO_init() function
- */
-typedef struct {
-    /** Pointer to application specified IO extension, may be NULL. */
-    OD_extensionIO_t *extIO;
-    /** Pointer to PDO flags bit-field, see @ref OD_subEntry_t, may be NULL. */
-    OD_flagsPDO_t *flagsPDO;
-    /** Pointer to original odObject, see @ref OD_entry_t. */
-    const void *odObjectOriginal;
-} OD_obj_extended_t;
 
 /** @} */ /* CO_ODdefinition */
 
