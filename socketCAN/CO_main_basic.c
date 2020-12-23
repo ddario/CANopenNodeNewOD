@@ -104,7 +104,7 @@
 /* Other variables and objects */
 #ifndef CO_SINGLE_THREAD
 CO_epoll_t                  epRT; /* Epoll-timer object for realtime thread */
-static int                  rtPriority = -1;    /* Real time priority, configurable by arguments. (-1=RT disabled) */
+//static int                  rtPriority = -1;    /* Real time priority, configurable by arguments. (-1=RT disabled) */
 #endif
 CO_t                       *CO = NULL; /* CANopen object */
 static uint8_t              CO_pendingNodeId = 0xFF; /* Set by arguments or by OD_CAN_NODE_ID macro, if defined. Can be changed by LSS slave. */
@@ -271,6 +271,7 @@ int main (int argc, char *argv[]) {
     CO_epoll_t epMain;
 #ifndef CO_SINGLE_THREAD
     pthread_t rt_thread_id;
+    int       rtPriority = -1; /* Real time priority, configurable by arguments. (-1=RT disabled) */
 #endif
     CO_NMT_reset_cmd_t reset = CO_RESET_NOT;
     CO_ReturnError_t err;
