@@ -36,16 +36,16 @@
 *******************************************************************************/
 #define OD_CNT_NMT 1
 #define OD_CNT_EM 1
-//#define OD_CNT_SYNC 1
-//#define OD_CNT_SYNC_PROD 1
-//#define OD_CNT_TIME 1
+#define OD_CNT_SYNC 1
+#define OD_CNT_SYNC_PROD 1
+#define OD_CNT_TIME 1
 #define OD_CNT_EM_PROD 1
-//#define OD_CNT_HB_CONS 1
+#define OD_CNT_HB_CONS 1
 #define OD_CNT_HB_PROD 1
 #define OD_CNT_SDO_SRV 1
 #define OD_CNT_SDO_CLI 1
-//#define OD_CNT_RPDO 4
-//#define OD_CNT_TPDO 4
+#define OD_CNT_RPDO 4
+#define OD_CNT_TPDO 4
 
 
 /*******************************************************************************
@@ -220,6 +220,7 @@ typedef struct {
         uint32_t applicationObject_7;
         uint32_t applicationObject_8;
     } x1A03_TPDOMappingParameter;
+    uint32_t x1F80_NMTStartup;
 } OD_PERSIST_COMM_t;
 
 typedef struct {
