@@ -426,9 +426,9 @@ static inline uint16_t OD_getIndex(const OD_entry_t *entry) {
 /**
  * Restart read or write operation on OD variable
  *
- * It is not necessary to call this function, if stream was initialised by
- * @ref OD_getSub(). It is also not necessary to call this function, if prevous
- * read or write was successfully finished.
+ * It is not necessary to call this function, if stream was initialized by
+ * @ref OD_getSub(). It is also not necessary to call this function, if
+ * previous read or write was successfully finished.
  *
  * @param stream Object Dictionary stream object.
  */
@@ -687,7 +687,7 @@ typedef enum {
  * @ref OD_extensionIO_init() function. Contains application specified
  * parameters for extended OD object.
  */
-typedef struct OD_obj_extended_s {
+typedef struct {
     /** Object on which read and write will operate */
     void *object;
     /** Application specified function pointer, see @ref OD_IO_t. */
@@ -699,7 +699,6 @@ typedef struct OD_obj_extended_s {
     /** Pointer to PDO flags bit-field, see @ref OD_subEntry_t, may be NULL. */
     OD_flagsPDO_t *flagsPDO;
 } OD_obj_extended_t;
-
 
 /**
  * Object for single OD variable, used for "VAR" type OD objects

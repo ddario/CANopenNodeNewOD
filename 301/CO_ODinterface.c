@@ -39,7 +39,7 @@ OD_size_t OD_readOriginal(OD_stream_t *stream, uint8_t subIndex,
     }
 
     OD_size_t dataLenToCopy = stream->dataLength; /* length of OD variable */
-    const uint8_t *odData = (const uint8_t *) stream->data;
+    uint8_t *odData = stream->data;
 
     if (odData == NULL) {
         *returnCode = ODR_SUB_NOT_EXIST;
@@ -88,7 +88,7 @@ OD_size_t OD_writeOriginal(OD_stream_t *stream, uint8_t subIndex,
     }
 
     OD_size_t dataLenToCopy = stream->dataLength; /* length of OD variable */
-    uint8_t *odData = (uint8_t *) stream->data;
+    uint8_t *odData = stream->data;
 
     if (odData == NULL) {
         *returnCode = ODR_SUB_NOT_EXIST;
@@ -205,14 +205,13 @@ ODR_t OD_getSub(const OD_entry_t *entry, uint8_t subIndex,
 
     OD_stream_t *stream = (OD_stream_t *)io;
     const OD_obj_var_t *odv = entry->odObject;
-    const OD_obj_extended_t *odObjectExt = odv->ext;
+    const OD_obj_extended_t *odExt = odv->ext;
     uint8_t odBasicType = entry->odObjectType & ODT_TYPE_MASK;
     OD_attr_t attr = 0;
 
     /* Is object type extended? */
-    if ((entry->odObjectType & ODT_EXTENSION_MASK) != 0 &&
-        odObjectExt == NULL) {
-        return ODR_DEV_INCOMPAT;
+    if ((entry->odObjectType & ODT_EXTENSION_MASK) != 0 && odExt == NULL) {
+          return ODR_DEV_INCOMPAT;
     }
 
     /* Attribute, dataObjectOriginal and dataLength, depends on object type */
@@ -274,17 +273,15 @@ ODR_t OD_getSub(const OD_entry_t *entry, uint8_t subIndex,
     }
 
     /* read, write and dataObject, direct or with IO extension */
-    if (odObjectExt == NULL || odOrig) {
+    if (odExt == NULL || odOrig) {
         io->read = OD_readOriginal;
         io->write = OD_writeOriginal;
         stream->object = NULL;
     }
     else {
-        io->read = odObjectExt->read != NULL ?
-                   odObjectExt->read : OD_readDisabled;
-        io->write = odObjectExt->write != NULL ?
-                    odObjectExt->write : OD_writeDisabled;
-        stream->object = odObjectExt->object;
+        io->read  = odExt->read  != NULL ? odExt->read  : OD_readDisabled;
+        io->write = odExt->write != NULL ? odExt->write : OD_writeDisabled;
+        stream->object = odExt->object;
     }
 
     /* common properties */
@@ -293,8 +290,7 @@ ODR_t OD_getSub(const OD_entry_t *entry, uint8_t subIndex,
         subEntry->subIndex = subIndex;
         subEntry->attribute = attr;
         subEntry->subEntriesCount = entry->subEntriesCount;
-        subEntry->flagsPDO = odObjectExt != NULL ?
-                             odObjectExt->flagsPDO : NULL;
+        subEntry->flagsPDO = odExt != NULL ? odExt->flagsPDO : NULL;
     }
 
     /* Initialize stream offset */
