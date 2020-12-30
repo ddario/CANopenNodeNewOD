@@ -190,7 +190,6 @@ OD_PERSIST_COMM_t OD_PERSIST_COMM = {
         .applicationObject_7 = 0x00000000,
         .applicationObject_8 = 0x00000000
     },
-    .x1F80_NMTStartup = 0x00000080
 };
 
 OD_RAM_t OD_RAM = {
@@ -274,7 +273,6 @@ typedef struct {
     OD_obj_extended_t oE_1A02_TPDOMappingParameter;
     OD_obj_record_t o_1A03_TPDOMappingParameter[9];
     OD_obj_extended_t oE_1A03_TPDOMappingParameter;
-    OD_obj_var_t o_1F80_NMTstartup;
 } ODObjs_t;
 
 static ODObjs_t ODObjs = {
@@ -1712,12 +1710,6 @@ static ODObjs_t ODObjs = {
         .read = NULL,
         .write = NULL,
         .flagsPDO = NULL
-    },
-    .o_1F80_NMTstartup = {
-        .data = &OD_PERSIST_COMM.x1F80_NMTStartup,
-        .attribute = ODA_SDO_R | ODA_MB,
-        .dataLength = 4,
-        .ext = NULL
     }
 };
 
@@ -1759,7 +1751,6 @@ static OD_entry_t ODList[] = {
     {0x1A01, 0x09, ODT_EREC, &ODObjs.o_1A01_TPDOMappingParameter},
     {0x1A02, 0x09, ODT_EREC, &ODObjs.o_1A02_TPDOMappingParameter},
     {0x1A03, 0x09, ODT_EREC, &ODObjs.o_1A03_TPDOMappingParameter},
-    {0x1F80, 0x01, ODT_VAR, &ODObjs.o_1F80_NMTstartup},
     {0x0000, 0x00, 0, NULL}
 };
 

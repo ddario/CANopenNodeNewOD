@@ -293,11 +293,6 @@ ODR_t OD_getSub(const OD_entry_t *entry, uint8_t subIndex,
         subEntry->flagsPDO = odExt != NULL ? odExt->flagsPDO : NULL;
     }
 
-    /* read, write and dataObject with IO extension */
-    subEntry->read  = (odExt->read  != NULL) ? odExt->read  : OD_readDisabled;
-    subEntry->write = (odExt->write != NULL) ? odExt->write : OD_writeDisabled;
-    stream->object = odExt->object;
-
     /* Initialize stream offset */
     stream->dataOffset = 0;
 
@@ -436,7 +431,7 @@ ODR_t OD_getPtr (const OD_entry_t *entry, uint8_t subIndex, void **val,
 
     *val = stream->data;
 
-    if (len != NULL) len = stream->dataLength;
+    if (len != NULL) *len = stream->dataLength;
 
     return ret;
 }

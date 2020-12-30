@@ -45,15 +45,17 @@ SOURCES = \
 
 OBJS = $(SOURCES:%.c=%.o)
 CC ?= gcc
-OPT  = -g
-#OPT += -DCO_SINGLE_THREAD
+OPT =
+OPT += -g
+OPT += -DCO_SINGLE_THREAD
 #OPT += -DCO_CONFIG_DEBUG=0xFFFF
 #OPT += -pedantic -Wshadow -fanalyzer
 #OPT += -DCO_USE_GLOBALS
 #OPT += -DCO_MULTIPLE_OD
 CFLAGS = -Wall $(OPT) $(INCLUDE_DIRS)
-LDFLAGS = -g
-LDFLAGS += -pthread
+LDFLAGS =
+#LDFLAGS = -g
+#LDFLAGS += -pthread
 
 #Options can be also passed via make: 'make OPT="-g" LDFLAGS="-pthread"'
 

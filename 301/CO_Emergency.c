@@ -391,7 +391,7 @@ CO_ReturnError_t CO_EM_init(CO_EM_t *em,
     memset(em, 0, sizeof(CO_EM_t));
 
     /* get and verify "Error register" from Object Dictionary */
-    if (OD_getPtr(OD_1001_errReg, 0, (void **)&em->errorRegister) != ODR_OK) {
+    if (OD_getPtr(OD_1001_errReg, 0, (void **)&em->errorRegister, NULL) != ODR_OK) {
         CO_errinfo(CANdevTx, OD_getIndex(OD_1001_errReg));
         return CO_ERROR_OD_PARAMETERS;
     }

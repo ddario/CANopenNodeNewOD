@@ -220,7 +220,6 @@ typedef struct {
         uint32_t applicationObject_7;
         uint32_t applicationObject_8;
     } x1A03_TPDOMappingParameter;
-    uint32_t x1F80_NMTStartup;
 } OD_PERSIST_COMM_t;
 
 typedef struct {
