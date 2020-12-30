@@ -162,13 +162,13 @@ const OD_entry_t *OD_find(const OD_t *od, uint16_t index) {
         return NULL;
     }
 
-    unsigned int cur;
-    unsigned int min = 0;
-    unsigned int max = od->size - 1;
+    uint16_t cur;
+    uint16_t min = 0;
+    uint16_t max = od->size - 1;
 
     /* Fast search in ordered Object Dictionary. If indexes are mixed,
-     * this won't work. If Object Dictionary has up to N entries, then
-     * max number of loop passes is log2(N). */
+     * this won't work. If Object Dictionary has up to N entries, then the
+     * max number of loop passes is log2(N) */
     while (min < max) {
         /* get entry between min and max */
         cur = (min + max) >> 1;
@@ -293,6 +293,11 @@ ODR_t OD_getSub(const OD_entry_t *entry, uint8_t subIndex,
         subEntry->flagsPDO = odExt != NULL ? odExt->flagsPDO : NULL;
     }
 
+    /* read, write and dataObject with IO extension */
+    subEntry->read  = (odExt->read  != NULL) ? odExt->read  : OD_readDisabled;
+    subEntry->write = (odExt->write != NULL) ? odExt->write : OD_writeDisabled;
+    stream->object = odExt->object;
+
     /* Initialize stream offset */
     stream->dataOffset = 0;
 
@@ -324,7 +329,7 @@ uint32_t OD_getSDOabCode(ODR_t returnCode) {
         0x060A0023UL, /* Resource not available: SDO connection */
         0x08000000UL, /* General error */
         0x08000020UL, /* Data cannot be transferred or stored to application */
-        0x08000021UL, /* Data cannot be transf. because of local control */
+        0x08000021UL, /* Data cannot be transferred because of local control */
         0x08000022UL, /* Data cannot be tran. because of present device state */
         0x08000023UL, /* Object dict. not present or dynamic generation fails */
         0x08000024UL  /* No data available */

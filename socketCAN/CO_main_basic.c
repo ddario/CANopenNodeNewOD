@@ -104,7 +104,7 @@
 /* Other variables and objects */
 #ifndef CO_SINGLE_THREAD
 CO_epoll_t                  epRT; /* Epoll-timer object for realtime thread */
-//static int                  rtPriority = -1;    /* Real time priority, configurable by arguments. (-1=RT disabled) */
+static int                  rtPriority = -1;    /* Real time priority, configurable by arguments. (-1=RT disabled) */
 #endif
 CO_t                       *CO = NULL; /* CANopen object */
 static uint8_t              CO_pendingNodeId = 0xFF; /* Set by arguments or by OD_CAN_NODE_ID macro, if defined. Can be changed by LSS slave. */
@@ -271,7 +271,6 @@ int main (int argc, char *argv[]) {
     CO_epoll_t epMain;
 #ifndef CO_SINGLE_THREAD
     pthread_t rt_thread_id;
-    int       rtPriority = -1; /* Real time priority, configurable by arguments. (-1=RT disabled) */
 #endif
     CO_NMT_reset_cmd_t reset = CO_RESET_NOT;
     CO_ReturnError_t err;
@@ -515,7 +514,7 @@ int main (int argc, char *argv[]) {
         err = CO_CANopenInit(CO,                /* CANopen object */
                              NULL,              /* alternate NMT */
                              NULL,              /* alternate em */
-                             &OD,               /* Object dictionary */
+                             OD,                /* Object dictionary */
                              OD_STATUS_BITS,    /* Optional OD_statusBits */
                              NMT_CONTROL,       /* CO_NMT_control_t */
                              FIRST_HB_TIME,     /* firstHBTime_ms */

@@ -240,7 +240,7 @@ typedef struct {
 
 extern OD_PERSIST_COMM_t OD_PERSIST_COMM;
 extern OD_RAM_t OD_RAM;
-extern const OD_t OD;
+extern const OD_t *OD;
 
 
 /*******************************************************************************

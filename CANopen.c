@@ -1025,7 +1025,7 @@ CO_ReturnError_t CO_CANopenInit(CO_t *co,
             SDOsrvPar = OD_find (od, OD_H1200_SDO_SERVER_1_PARAM + i);
             err = CO_SDOserver_init(&co->SDOserver[i],
                                     od,
-                                    SDOsrvPar++,
+                                    SDOsrvPar,
                                     nodeId,
                                     SDOserverTimeoutTime_ms,
                                     co->CANmodule,

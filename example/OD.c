@@ -208,45 +208,6 @@ OD_RAM_t OD_RAM = {
     }
 };
 
-
-/*******************************************************************************
-    IO extensions and flagsPDO (configurable by application)
-*******************************************************************************/
-typedef struct {
-    OD_extensionIO_t xio_1003_pre_definedErrorField;
-    OD_extensionIO_t xio_1005_COB_ID_SYNCMessage;
-    OD_extensionIO_t xio_1006_communicationCyclePeriod;
-    OD_extensionIO_t xio_1007_synchronousWindowLength;
-    OD_extensionIO_t xio_1010_storeParameters;
-    OD_extensionIO_t xio_1011_restoreDefaultParameters;
-    OD_extensionIO_t xio_1012_COB_IDTimeStampObject;
-    OD_extensionIO_t xio_1014_COB_ID_EMCY;
-    OD_extensionIO_t xio_1015_inhibitTimeEMCY;
-    OD_extensionIO_t xio_1016_consumerHeartbeatTime;
-    OD_extensionIO_t xio_1017_producerHeartbeatTime;
-    OD_extensionIO_t xio_1200_SDOServerParameter;
-    OD_extensionIO_t xio_1280_SDOClientParameter;
-    OD_extensionIO_t xio_1400_RPDOCommunicationParameter;
-    OD_extensionIO_t xio_1401_RPDOCommunicationParameter;
-    OD_extensionIO_t xio_1402_RPDOCommunicationParameter;
-    OD_extensionIO_t xio_1403_RPDOCommunicationParameter;
-    OD_extensionIO_t xio_1600_RPDOMappingParameter;
-    OD_extensionIO_t xio_1601_RPDOMappingParameter;
-    OD_extensionIO_t xio_1602_RPDOMappingParameter;
-    OD_extensionIO_t xio_1603_RPDOMappingParameter;
-    OD_extensionIO_t xio_1800_TPDOCommunicationParameter;
-    OD_extensionIO_t xio_1801_TPDOCommunicationParameter;
-    OD_extensionIO_t xio_1802_TPDOCommunicationParameter;
-    OD_extensionIO_t xio_1803_TPDOCommunicationParameter;
-    OD_extensionIO_t xio_1A00_TPDOMappingParameter;
-    OD_extensionIO_t xio_1A01_TPDOMappingParameter;
-    OD_extensionIO_t xio_1A02_TPDOMappingParameter;
-    OD_extensionIO_t xio_1A03_TPDOMappingParameter;
-} ODExts_t;
-
-static ODExts_t ODExts = {0};
-
-
 /*******************************************************************************
     All OD objects (const)
 *******************************************************************************/
@@ -342,7 +303,9 @@ static const ODObjs_t ODObjs = {
         .dataElementSizeof = sizeof(uint32_t)
     },
     .oE_1003_pre_definedErrorField = {
-        .extIO = &ODExts.xio_1003_pre_definedErrorField,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1005_COB_ID_SYNCMessage = {
@@ -352,7 +315,9 @@ static const ODObjs_t ODObjs = {
         .ext = &ODObjs.oE_1005_COB_ID_SYNCMessage
     },
     .oE_1005_COB_ID_SYNCMessage = {
-        .extIO = &ODExts.xio_1005_COB_ID_SYNCMessage,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1006_communicationCyclePeriod = {
@@ -362,7 +327,9 @@ static const ODObjs_t ODObjs = {
         .ext = &ODObjs.oE_1006_communicationCyclePeriod
     },
     .oE_1006_communicationCyclePeriod = {
-        .extIO = &ODExts.xio_1006_communicationCyclePeriod,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1007_synchronousWindowLength = {
@@ -372,7 +339,9 @@ static const ODObjs_t ODObjs = {
         .ext = &ODObjs.oE_1007_synchronousWindowLength
     },
     .oE_1007_synchronousWindowLength = {
-        .extIO = &ODExts.xio_1007_synchronousWindowLength,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1010_storeParameters = {
@@ -388,7 +357,9 @@ static const ODObjs_t ODObjs = {
         .dataElementSizeof = sizeof(uint32_t)
     },
     .oE_1010_storeParameters = {
-        .extIO = &ODExts.xio_1010_storeParameters,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1011_restoreDefaultParameters = {
@@ -404,7 +375,9 @@ static const ODObjs_t ODObjs = {
         .dataElementSizeof = sizeof(uint32_t)
     },
     .oE_1011_restoreDefaultParameters = {
-        .extIO = &ODExts.xio_1011_restoreDefaultParameters,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1012_COB_IDTimeStampObject = {
@@ -414,7 +387,9 @@ static const ODObjs_t ODObjs = {
         .ext = &ODObjs.oE_1012_COB_IDTimeStampObject
     },
     .oE_1012_COB_IDTimeStampObject = {
-        .extIO = &ODExts.xio_1012_COB_IDTimeStampObject,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1014_COB_ID_EMCY = {
@@ -424,7 +399,9 @@ static const ODObjs_t ODObjs = {
         .ext = &ODObjs.oE_1014_COB_ID_EMCY
     },
     .oE_1014_COB_ID_EMCY = {
-        .extIO = &ODExts.xio_1014_COB_ID_EMCY,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1015_inhibitTimeEMCY = {
@@ -434,7 +411,9 @@ static const ODObjs_t ODObjs = {
         .ext = &ODObjs.oE_1015_inhibitTimeEMCY
     },
     .oE_1015_inhibitTimeEMCY = {
-        .extIO = &ODExts.xio_1015_inhibitTimeEMCY,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1016_consumerHeartbeatTime = {
@@ -450,7 +429,9 @@ static const ODObjs_t ODObjs = {
         .dataElementSizeof = sizeof(uint32_t)
     },
     .oE_1016_consumerHeartbeatTime = {
-        .extIO = &ODExts.xio_1016_consumerHeartbeatTime,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1017_producerHeartbeatTime = {
@@ -460,7 +441,9 @@ static const ODObjs_t ODObjs = {
         .ext = &ODObjs.oE_1017_producerHeartbeatTime
     },
     .oE_1017_producerHeartbeatTime = {
-        .extIO = &ODExts.xio_1017_producerHeartbeatTime,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1018_identity = {
@@ -545,7 +528,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1200_SDOServerParameter = {
-        .extIO = &ODExts.xio_1200_SDOServerParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1280_SDOClientParameter = {
@@ -587,7 +572,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1280_SDOClientParameter = {
-        .extIO = &ODExts.xio_1280_SDOClientParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1400_RPDOCommunicationParameter = {
@@ -671,7 +658,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1401_RPDOCommunicationParameter = {
-        .extIO = &ODExts.xio_1401_RPDOCommunicationParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1402_RPDOCommunicationParameter = {
@@ -713,7 +702,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1402_RPDOCommunicationParameter = {
-        .extIO = &ODExts.xio_1402_RPDOCommunicationParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1403_RPDOCommunicationParameter = {
@@ -755,7 +746,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1403_RPDOCommunicationParameter = {
-        .extIO = &ODExts.xio_1403_RPDOCommunicationParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1600_RPDOMappingParameter = {
@@ -842,7 +835,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1600_RPDOMappingParameter = {
-        .extIO = &ODExts.xio_1600_RPDOMappingParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1601_RPDOMappingParameter = {
@@ -929,7 +924,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1601_RPDOMappingParameter = {
-        .extIO = &ODExts.xio_1601_RPDOMappingParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1602_RPDOMappingParameter = {
@@ -1016,7 +1013,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1602_RPDOMappingParameter = {
-        .extIO = &ODExts.xio_1602_RPDOMappingParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1603_RPDOMappingParameter = {
@@ -1103,7 +1102,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1603_RPDOMappingParameter = {
-        .extIO = &ODExts.xio_1603_RPDOMappingParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1800_TPDOCommunicationParameter = {
@@ -1163,7 +1164,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1800_TPDOCommunicationParameter = {
-        .extIO = &ODExts.xio_1800_TPDOCommunicationParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1801_TPDOCommunicationParameter = {
@@ -1223,7 +1226,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1801_TPDOCommunicationParameter = {
-        .extIO = &ODExts.xio_1801_TPDOCommunicationParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1802_TPDOCommunicationParameter = {
@@ -1283,7 +1288,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1802_TPDOCommunicationParameter = {
-        .extIO = &ODExts.xio_1802_TPDOCommunicationParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1803_TPDOCommunicationParameter = {
@@ -1343,7 +1350,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1803_TPDOCommunicationParameter = {
-        .extIO = &ODExts.xio_1803_TPDOCommunicationParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1A00_TPDOMappingParameter = {
@@ -1430,7 +1439,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1A00_TPDOMappingParameter = {
-        .extIO = &ODExts.xio_1A00_TPDOMappingParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1A01_TPDOMappingParameter = {
@@ -1517,7 +1528,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1A01_TPDOMappingParameter = {
-        .extIO = &ODExts.xio_1A01_TPDOMappingParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1A02_TPDOMappingParameter = {
@@ -1604,7 +1617,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1A02_TPDOMappingParameter = {
-        .extIO = &ODExts.xio_1A02_TPDOMappingParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1A03_TPDOMappingParameter = {
@@ -1691,7 +1706,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1A03_TPDOMappingParameter = {
-        .extIO = &ODExts.xio_1A03_TPDOMappingParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1F80_NMTstartup = {
@@ -1744,7 +1761,9 @@ static const OD_entry_t ODList[] = {
     {0x0000, 0x00, 0, NULL}
 };
 
-const OD_t OD = {
+const OD_t _OD = {
     (sizeof(ODList) / sizeof(ODList[0])) - 1,
     &ODList[0]
 };
+
+const OD_t OD = &_OD;

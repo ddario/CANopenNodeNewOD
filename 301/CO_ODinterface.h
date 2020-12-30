@@ -304,7 +304,7 @@ typedef struct {
      *
      * Write can be restarted with @ref OD_rwRestart() function.
      *
-     * At the moment, when Object Dictionary is initialised, every variable has
+     * At the moment, when Object Dictionary is initialized, every variable has
      * assigned the same "write" function, which simply copies data to Object
      * Dictionary variable. Application can bind its own "write" function,
      * similar as it can bind "read" function.
