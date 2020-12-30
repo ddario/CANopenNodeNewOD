@@ -277,7 +277,7 @@ typedef struct {
     OD_obj_var_t o_1F80_NMTstartup;
 } ODObjs_t;
 
-static const ODObjs_t ODObjs = {
+static ODObjs_t ODObjs = {
     .o_1000_deviceType = {
         .data = &OD_PERSIST_COMM.x1000_deviceType,
         .attribute = ODA_SDO_R | ODA_MB,
@@ -616,7 +616,9 @@ static const ODObjs_t ODObjs = {
         }
     },
     .oE_1400_RPDOCommunicationParameter = {
-        .extIO = &ODExts.xio_1400_RPDOCommunicationParameter,
+        .object = NULL,
+        .read = NULL,
+        .write = NULL,
         .flagsPDO = NULL
     },
     .o_1401_RPDOCommunicationParameter = {
@@ -1723,7 +1725,7 @@ static const ODObjs_t ODObjs = {
 /*******************************************************************************
     Object dictionary
 *******************************************************************************/
-static const OD_entry_t ODList[] = {
+static OD_entry_t ODList[] = {
     {0x1000, 0x01, ODT_VAR, &ODObjs.o_1000_deviceType},
     {0x1001, 0x01, ODT_VAR, &ODObjs.o_1001_errorRegister},
     {0x1003, 0x09, ODT_EARR, &ODObjs.o_1003_pre_definedErrorField},
@@ -1766,4 +1768,4 @@ const OD_t _OD = {
     &ODList[0]
 };
 
-const OD_t OD = &_OD;
+const OD_t *OD = &_OD;
